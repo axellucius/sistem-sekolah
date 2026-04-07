@@ -42,6 +42,10 @@
                         <label class="block font-bold" for="phone_number">No Telepon</label>
                         <input class="border rounded-lg py-2 px-4 w-full" type="text" name="phone_number" id="phone_number" placeholder="Masukkan No Telepon">
                     </div>
+                    <div class="flex justify-end gap-4 col-span-2">
+                        <a href="/students" class="py-2 px-4 bg-gray-300 rounded">Kembali</a>
+                            <button type="submit" class="py-2 px-4 bg-blue-500 rounded-lg text-white">Simpan</button>
+                        </div>
                 </form>
             </div>
     </main>
