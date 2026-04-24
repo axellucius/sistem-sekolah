@@ -8,12 +8,11 @@ class Student extends Database
 {
     protected $table = 'students';
 
-    // Menampilkan Daftar Siswa
     public function getStudents()
     {
         $students = [];
 
-        $query = "SELECT * FROM {$this->table}";
+        $query = "SELECT * from {$this->table}";
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
 
@@ -26,44 +25,75 @@ class Student extends Database
         return $students;
     }
 
-    // Menampilkan detail siswa
     public function getStudent(int $id)
     {
-        $query = "SELECT * FROM {$this->table} WHERE id = ?";
-
+        $query = "SELECT * from {$this->table} where id = ?";
         $stmt = $this->connection->prepare($query);
         $stmt->bind_param('i', $id);
         $stmt->execute();
 
         $result = $stmt->get_result();
-
         $student = $result->fetch_assoc();
 
         return $student;
     }
 
-    // Menambahkan Data Siswa
     public function insert(array $data)
     {
-        $name = htmlspecialchars($data['name']);
         $nis = htmlspecialchars($data['nis']);
+        $name = htmlspecialchars($data['name']);
         $class = htmlspecialchars($data['class']);
         $phoneNumber = htmlspecialchars($data['phone_number']);
 
-        $query = "INSERT INTO {$this->table} (name, nis, class, phone_number) VALUES (?,?,?,?)";
-
+        $query = "INSERT INTO {$this->table} (nis, name, class, phone_number) VALUES (?, ?, ?, ?)";
         $stmt = $this->connection->prepare($query);
-        $stmt->bind_param('ssss', $name, $nis, $class, $phoneNumber);
+        $stmt->bind_param("ssss", $nis, $name, $class, $phoneNumber);
         $stmt->execute();
 
         if ($stmt->affected_rows > 0) {
             header('Location: /students');
             exit();
         } else {
-            echo 'Error to store student';
+            die('Error to store students : ' . $stmt->error);
         }
     }
 
+    public function update(array $data, int $id,)
+    {
+        $nis = htmlspecialchars($data['nis']);
+        $name = htmlspecialchars($data['name']);
+        $class = htmlspecialchars($data['class']);
+        $phoneNumber = htmlspecialchars($data['phone_number']);
+
+        $query = "UPDATE {$this->table} SET nis=?, name=?, class=?, phone_number=? WHERE id=?";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("ssssi", $nis, $name, $class, $phoneNumber, $id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            header('Location: /students');
+            exit();
+        } else {
+            die('Error to update students : ' . $stmt->error);
+        }
+    }
+
+    public function delete(int $id)
+    {
+        $id = htmlspecialchars($id);
+
+        $query = "DELETE FROM {$this->table} WHERE id = ?";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            header('Location: /students');
+            exit();
+        } else {
+            die('Error to delete students : ' . $stmt->error);
+        }
+    }
 }
 
 ?>
